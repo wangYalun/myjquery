@@ -24,8 +24,19 @@ jQuery.prototype.init=function(selector){
 	var elem=document.getElementById(/[^#].*/.exec(selector)[0]);
 	this[0]=elem;
 	this.selector=selector;
+	this.length=1;
 }
 jQuery.fn=jQuery.prototype;
+// jQuery.fn=jQuery.prototype={
+// 	jquery:'version-allen',
+// 	length:0,
+// 	constructor:jQuery,
+// 	selector:'',
+// 	each:function(callback){
+// 		return jQuery.each(this,callback);
+// 	}
+// }
+
 
 
 
@@ -123,6 +134,16 @@ jQuery.extend({
 	},
 	isWindow: function( obj ) {
 		return obj != null && obj === obj.window;
+	},
+	type: function( obj ) {
+		if ( obj == null ) {
+			return obj + "";
+		}
+
+		// Support: Android<4.0, iOS<6 (functionish RegExp)
+		return typeof obj === "object" || typeof obj === "function" ?
+			class2type[ toString.call( obj ) ] || "object" :
+			typeof obj;
 	}
 });
 
@@ -137,15 +158,36 @@ function isArrayLike( obj ) {
 	// `in` check used to prevent JIT error (gh-2145)
 	// hasOwn isn't used here due to false negatives
 	// regarding Nodelist length in IE
-	var length = !!obj && "length" in obj && obj.length,
-		type = jQuery.type( obj );
+	var length = !!obj && "length" in obj && obj.length, //true
 
+		type = jQuery.type( obj ); //object
 	if ( type === "function" || jQuery.isWindow( obj ) ) {
 		return false;
 	}
-
 	return type === "array" || length === 0 ||
 		typeof length === "number" && length > 0 && ( length - 1 ) in obj;
 }
+
+var $div=$('#haha');
+console.log(jQuery.type($div));
+console.log(isArrayLike($div));
+console.log({}.toString.call($div));
+
+var rnotwhite = ( /\S+/g );
+
+
+
+// Convert String-formatted options into Object-formatted ones
+function createOptions( options ) {
+	var object = {};
+	jQuery.each( options.match( rnotwhite ) || [], function( _, flag ) {
+		object[ flag ] = true;
+	} );
+	return object;
+}
+
+console.log(createOptions('once memoery'));
+
+
 
 

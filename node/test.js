@@ -33,7 +33,9 @@ function isArrayLike( obj ) {
 
 isArrayLike(a);
 
+var length=34&&0&&'fsf';
+console.log(length);
 var arr=new Array();
 console.log({}.toString.call(arr));
-
-console.log('name' in a);
+console.log(typeof isArrayLike);
+console.log('Boolean Number String Function Array Date RegExp Object Error Symbol');

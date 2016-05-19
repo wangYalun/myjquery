@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>浏览器环境测试</title>
+</head>
+<body>
+<div id='haha'>哈哈</div>
+<script type="text/javascript">
+	
+</script>
+<script type="text/javascript" src="jquery/dist/jquery.js"></script>
+<script type="text/javascript">
+	var callback=$.Callbacks('unique');
+	function fn1(value){
+		console.log(value);
+	}
+	callback.add(fn1);
+	callback.add(function(value){
+		fn1('fn1 say '+value);
+	});
+	callback.add(fn1);
+	callback.fire('haha');
+	callback.fire('oo');
+</script>
+</body>
+</html>
