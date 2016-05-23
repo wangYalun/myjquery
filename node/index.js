@@ -45,7 +45,7 @@ A.fun1().init().fun2();
 instance_a.init().fun1();
 
 
-//扩展
+//插件接口设计
 A.extend=function(){
 	var options,src,copy,
 		target = arguments[0]||{},

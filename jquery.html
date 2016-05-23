@@ -6,22 +6,50 @@
 </head>
 <body>
 <div id='haha'>哈哈</div>
+<button id='promise'>异步运行</button>
 <script type="text/javascript">
 	
 </script>
 <script type="text/javascript" src="jquery/dist/jquery.js"></script>
 <script type="text/javascript">
-	var callback=$.Callbacks('unique');
-	function fn1(value){
-		console.log(value);
-	}
-	callback.add(fn1);
-	callback.add(function(value){
-		fn1('fn1 say '+value);
-	});
-	callback.add(fn1);
-	callback.fire('haha');
-	callback.fire('oo');
+/**
+*回调函数
+**/
+	// var callback=$.Callbacks('unique');
+	// function fn1(value){
+	// 	console.log(value);
+	// }
+	// callback.add(fn1);
+	// callback.add(function(value){
+	// 	fn1('fn1 say '+value);
+	// });
+	// callback.add(fn1);
+	// callback.fire('haha');
+	// callback.fire('oo');
+function task3(name) {
+  var dtd = $.Deferred();
+  setTimeout(function() {
+    console.log('task3执行完毕');
+    dtd.resolve(name);
+  }, 500);
+  return dtd;
+}
+
+function task4(name) {
+  var dtd = $.Deferred();
+  setTimeout(function() {
+    console.log('task4执行完毕');
+    dtd.resolve(name);
+  }, 100);
+  return dtd;
+}
+
+$("#haha").click(function() {
+  $.when(task3('task1'), task4('task2')).done(function() {
+    console.log('when处理成功');
+  })
+});
+
 </script>
 </body>
 </html>

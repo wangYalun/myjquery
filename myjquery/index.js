@@ -1,3 +1,10 @@
+/*
+*立即调用表达式
+*任何库与框架设计的第一个要点就是解决命名空间与变量污染的问题。
+*jQuery就是利用了JavaScript函数作用域的特性，采用立即调用表达式包裹了自身的方法来解决这个问题。
+*/
+
+(function(window,undefined){
 var arr = [];
 
 var slice = arr.slice;
@@ -21,11 +28,17 @@ var $=jQuery=function(selector){
 }
 
 jQuery.prototype.init=function(selector){
-	var elem=document.getElementById(/[^#].*/.exec(selector)[0]);
-	this[0]=elem;
+	// var elem=document.getElementById(/[^#].*/.exec(selector)[0]);
+	var it=this;
+	var elem=document.querySelectorAll(selector);
+	console.log(elem);
+	jQuery.each(elem,function(i,item){
+		it[i]=item;
+	});
+	this.length=elem.length;
 	this.selector=selector;
-	this.length=1;
 }
+//静态方法和实例方法共享设计
 jQuery.fn=jQuery.prototype;
 // jQuery.fn=jQuery.prototype={
 // 	jquery:'version-allen',
@@ -42,6 +55,8 @@ jQuery.fn=jQuery.prototype;
 
 jQuery.fn.init.prototype=jQuery.fn;
 
+
+//插件接口设计
 jQuery.extend=jQuery.fn.extend=function(){
 	var options, name, src, copy, copyIsArray, clone,
 		target = arguments[ 0 ] || {},
@@ -135,6 +150,43 @@ jQuery.extend({
 	isWindow: function( obj ) {
 		return obj != null && obj === obj.window;
 	},
+	isNumeric: function( obj ) {
+
+		// parseFloat NaNs numeric-cast false positives (null|true|false|"")
+		// ...but misinterprets leading-number strings, particularly hex literals ("0x...")
+		// subtraction forces infinities to NaN
+		// adding 1 corrects loss of precision from parseFloat (#15100)
+		var realStringObj = obj && obj.toString();
+		return !jQuery.isArray( obj ) && ( realStringObj - parseFloat( realStringObj ) + 1 ) >= 0;
+	},
+
+	isPlainObject: function( obj ) {
+
+		// Not plain objects:
+		// - Any object or value whose internal [[Class]] property is not "[object Object]"
+		// - DOM nodes
+		// - window
+		if ( jQuery.type( obj ) !== "object" || obj.nodeType || jQuery.isWindow( obj ) ) {
+			return false;
+		}
+
+		if ( obj.constructor &&
+				!hasOwn.call( obj.constructor.prototype, "isPrototypeOf" ) ) {
+			return false;
+		}
+
+		// If the function hasn't returned already, we're confident that
+		// |obj| is a plain object, created by {} or constructed with new Object
+		return true;
+	},
+
+	isEmptyObject: function( obj ) {
+		var name;
+		for ( name in obj ) {
+			return false;
+		}
+		return true;
+	},
 	type: function( obj ) {
 		if ( obj == null ) {
 			return obj + "";
@@ -169,24 +221,46 @@ function isArrayLike( obj ) {
 }
 
 var $div=$('#haha');
+console.log('----');
+console.log($div);
+var $ul=$('#ul li');
+console.log($ul);
 console.log(jQuery.type($div));
 console.log(isArrayLike($div));
 console.log({}.toString.call($div));
 
-var rnotwhite = ( /\S+/g );
+// var rnotwhite = ( /\S+/g );
 
 
 
-// Convert String-formatted options into Object-formatted ones
-function createOptions( options ) {
-	var object = {};
-	jQuery.each( options.match( rnotwhite ) || [], function( _, flag ) {
-		object[ flag ] = true;
-	} );
-	return object;
-}
+// // Convert String-formatted options into Object-formatted ones
+// function createOptions( options ) {
+// 	var object = {};
+// 	jQuery.each( options.match( rnotwhite ) || [], function( _, flag ) {
+// 		object[ flag ] = true;
+// 	} );
+// 	return object;
+// }
 
-console.log(createOptions('once memoery'));
+// console.log(createOptions('once memoery'));
+
+	
+	// 核心方法
+	// 回调系统
+	// 异步队列
+	// 数据缓存
+	// 队列操作
+	// 选择器引
+	// 属性操作
+	// 节点遍历
+	// 文档处理
+	// 样式操作
+	// 属性操作
+	// 事件体系
+	// AJAX交互
+	// 动画引擎
+window.$=window._$=window.jQuery=jQuery;
+})(window);
 
 
 
